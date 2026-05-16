@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Dashboard | DigiPay E-Services</title>
+  <style>
+    :root {
+      --ink: #102033;
+      --deep: #102033;
+      --muted: #5d6f86;
+      --line: #d5e4f4;
+      --paper: #f4fbff;
+      --white: #ffffff;
+      --teal: #00a8c8;
+      --teal-dark: #006e8a;
+      --green: #17b26a;
+      --yellow: #ffca3a;
+      --red: #ff5a5f;
+      --accent: #6c4df6;
+      --card-bg: #ffffff;
+      --shadow: 0 18px 50px rgba(16, 32, 51, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 10px 0;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 22px;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--teal);
+      color: var(--white);
+      font-weight: 900;
+      box-shadow: 0 8px 22px rgba(0, 168, 200, 0.28);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 16px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--teal);
+      color: var(--white);
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(8, 127, 140, 0.22);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      background: var(--teal-dark);
+    }
+
+    .btn.light {
+      background: var(--card-bg);
+      color: var(--teal);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .btn.danger {
+      background: var(--red);
+      box-shadow: 0 10px 24px rgba(255, 90, 95, 0.24);
+    }
+
+    main {
+      padding: 28px 0 56px;
+    }
+
+    .dashboard-head {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      align-items: stretch;
+      margin-bottom: 20px;
+    }
+
+    .welcome,
+    .wallet {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+    }
+
+    .welcome {
+      padding: 28px;
+      background:
+        linear-gradient(135deg, rgba(0, 110, 138, 0.92), rgba(108, 77, 246, 0.72)),
+        url("https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1400&q=80") center/cover;
+      color: var(--white);
+    }
+
+    .welcome small {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      font-weight: 800;
+    }
+
+    .welcome h1 {
+      margin: 18px 0 8px;
+      font-size: clamp(30px, 5vw, 48px);
+      line-height: 1.08;
+    }
+
+    .welcome p {
+      max-width: 690px;
+      margin: 0;
+      color: #e8f8fb;
+      font-size: 17px;
+    }
+
+    .wallet {
+      padding: 22px;
+    }
+
+    .wallet-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--line);
+      font-weight: 800;
+    }
+
+    .wallet-row span {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .wallet-row:last-child {
+      border-bottom: 0;
+    }
+
+    .quick-services {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 20px 0;
+    }
+
+    .service-tile,
+    .tool-card,
+    .history-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--card-bg);
+      box-shadow: 0 10px 30px rgba(23, 32, 42, 0.06);
+    }
+
+    .service-tile {
+      min-height: 132px;
+      padding: 18px;
+    }
+
+    .icon {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: var(--white);
+      font-weight: 900;
+    }
+
+    .i-teal { background: var(--teal); }
+    .i-green { background: var(--green); }
+    .i-yellow { background: var(--yellow); color: var(--ink); }
+    .i-red { background: var(--red); }
+
+    .service-tile strong {
+      display: block;
+      margin: 12px 0 4px;
+      font-size: 17px;
+    }
+
+    .service-tile span,
+    .helper-text {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .tool-card,
+    .history-card {
+      padding: 22px;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .card-head h2 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 9px;
+      border-radius: 999px;
+      background: #e9fbff;
+      color: var(--teal-dark);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 46px;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--card-bg);
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .result-box {
+      display: none;
+      margin-top: 16px;
+      padding: 14px;
+      border: 1px dashed var(--teal);
+      border-radius: 8px;
+      background: #eefcff;
+      color: var(--ink);
+    }
+
+    .result-box.show {
+      display: block;
+    }
+
+    .history-card {
+      margin-top: 18px;
+    }
+
+    .history-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .history-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      font-size: 14px;
+    }
+
+    .history-item span {
+      color: var(--muted);
+    }
+
+    .guard {
+      display: none;
+      min-height: 100vh;
+      place-items: center;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .guard.show {
+      display: grid;
+    }
+
+    .guard-box {
+      width: min(460px, 100%);
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+    }
+
+    .app-shell.hidden {
+      display: none;
+    }
+
+    @media (max-width: 920px) {
+      .dashboard-head,
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-services {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .brand {
+        font-size: 18px;
+      }
+
+      .nav-actions {
+        width: 100%;
+      }
+
+      .quick-services,
+      .field-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .history-item {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="guard" id="loginGuard">
+    <div class="guard-box">
+      <h1>Login required</h1>
+      <p class="helper-text">User dashboard open karne ke liye pehle login karein.</p>
+      <a class="btn" href="index.html">Go to Login</a>
+    </div>
+  </div>
+
+  <div class="app-shell hidden" id="appShell">
+    <header>
+      <nav class="container nav" aria-label="User dashboard navigation">
+        <a class="brand" href="user.html" aria-label="DigiPay user dashboard">
+          <span class="brand-mark">DP</span>
+          <span>DigiPay User</span>
+        </a>
+        <div class="nav-actions">
+          <a class="btn light" href="index.html">Home</a>
+          <button class="btn danger" type="button" id="logoutBtn">Logout</button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <div class="container">
+        <section class="dashboard-head" aria-label="User account summary">
+          <div class="welcome">
+            <small>User Dashboard</small>
+            <h1>Welcome, <span id="userName">User</span></h1>
+            <p>Yahan se customer ka bill, LIC policy aur payment request details fetch kar sakenge. API connect karne ke liye form handlers ready rakhe gaye hain.</p>
+          </div>
+          <aside class="wallet" aria-label="Account status">
+            <div class="wallet-row">
+              <span>Email</span>
+              <strong id="userEmailText">-</strong>
+            </div>
+            <div class="wallet-row">
+              <span>Wallet Balance</span>
+              <strong>Rs. 0.00</strong>
+            </div>
+            <div class="wallet-row">
+              <span>Account Status</span>
+              <strong>Active</strong>
+            </div>
+          </aside>
+        </section>
+
+        <section class="quick-services" aria-label="Quick services">
+          <article class="service-tile">
+            <span class="icon i-teal">B</span>
+            <strong>Bill Fetch</strong>
+            <span>Electricity, water, gas aur broadband.</span>
+          </article>
+          <article class="service-tile">
+            <span class="icon i-green">L</span>
+            <strong>LIC Fetch</strong>
+            <span>Policy number se premium detail.</span>
+          </article>
+          <article class="service-tile">
+            <span class="icon i-yellow">P</span>
+            <strong>Payment</strong>
+            <span>Bill verify hone ke baad payment.</span>
+          </article>
+          <article class="service-tile">
+            <span class="icon i-red">R</span>
+            <strong>Receipt</strong>
+            <span>Transaction status aur receipt record.</span>
+          </article>
+        </section>
+
+        <section class="tools-grid" aria-label="Fetch services">
+          <article class="tool-card">
+            <div class="card-head">
+              <h2>Bill Fetch</h2>
+              <span class="tag">API Ready</span>
+            </div>
+            <form id="billFetchForm">
+              <div class="field-grid">
+                <div>
+                  <label for="billCategory">Bill Type</label>
+                  <select id="billCategory" name="billCategory">
+                    <option>Electricity</option>
+                    <option>Water</option>
+                    <option>Gas</option>
+                    <option>Broadband</option>
+                    <option>Mobile Postpaid</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="operator">Operator</label>
+                  <input id="operator" name="operator" type="text" placeholder="Operator name" required />
+                </div>
+                <div class="full">
+                  <label for="consumerNumber">Consumer Number</label>
+                  <input id="consumerNumber" name="consumerNumber" type="text" placeholder="Enter consumer / CA number" required />
+                </div>
+                <div class="full">
+                  <button class="btn" type="submit">Fetch Bill</button>
+                  <p class="helper-text" id="billStatus">Abhi demo response dikhega. API link karne par live bill details aayengi.</p>
+                </div>
+              </div>
+            </form>
+            <div class="result-box" id="billResult"></div>
+          </article>
+
+          <article class="tool-card">
+            <div class="card-head">
+              <h2>LIC Policy Fetch</h2>
+              <span class="tag">API Ready</span>
+            </div>
+            <form id="licFetchForm">
+              <div class="field-grid">
+                <div class="full">
+                  <label for="policyNumber">Policy Number</label>
+                  <input id="policyNumber" name="policyNumber" type="text" placeholder="Enter LIC policy number" required />
+                </div>
+                <div>
+                  <label for="dob">Date of Birth</label>
+                  <input id="dob" name="dob" type="date" required />
+                </div>
+                <div>
+                  <label for="mobile">Mobile Number</label>
+                  <input id="mobile" name="mobile" type="tel" placeholder="+91" required />
+                </div>
+                <div class="full">
+                  <button class="btn" type="submit">Fetch LIC</button>
+                  <p class="helper-text" id="licStatus">Abhi demo response dikhega. API add karne par premium details fetch hongi.</p>
+                </div>
+              </div>
+            </form>
+            <div class="result-box" id="licResult"></div>
+          </article>
+        </section>
+
+        <section class="history-card" aria-label="Recent activity">
+          <div class="card-head">
+            <h2>Recent Requests</h2>
+            <span class="tag">Local Demo</span>
+          </div>
+          <div class="history-list" id="historyList">
+            <div class="history-item">
+              <div>
+                <strong>No request yet</strong>
+                <br />
+                <span>Bill ya LIC fetch karne ke baad yahan activity dikh jayegi.</span>
+              </div>
+              <strong>-</strong>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDSDxtnPiWDuPHMo_9mn1K-HkmCTmrrW3E",
+      authDomain: "digipay-2a750.firebaseapp.com",
+      databaseURL: "https://digipay-2a750-default-rtdb.firebaseio.com",
+      projectId: "digipay-2a750",
+      storageBucket: "digipay-2a750.firebasestorage.app",
+      messagingSenderId: "493399728750",
+      appId: "1:493399728750:web:46e5fc9ba76d44ad997c7f",
+      measurementId: "G-JKZ1SCXJ8N"
+    };
+
+    const firebaseReady = !firebaseConfig.apiKey.includes("PASTE_") && !firebaseConfig.appId.includes("PASTE_");
+    const app = firebaseReady ? initializeApp(firebaseConfig) : null;
+    const auth = firebaseReady ? getAuth(app) : null;
+    const sessionKey = "digipay_current_user";
+    const requestKey = "digipay_user_requests";
+
+    const appShell = document.getElementById("appShell");
+    const loginGuard = document.getElementById("loginGuard");
+    const userName = document.getElementById("userName");
+    const userEmailText = document.getElementById("userEmailText");
+    const billResult = document.getElementById("billResult");
+    const licResult = document.getElementById("licResult");
+    const historyList = document.getElementById("historyList");
+
+    function readSession() {
+      return JSON.parse(localStorage.getItem(sessionKey) || "null");
+    }
+
+    function saveSession(user) {
+      localStorage.setItem(sessionKey, JSON.stringify(user));
+    }
+
+    function clearSession() {
+      localStorage.removeItem(sessionKey);
+    }
+
+    function showDashboard(user) {
+      appShell.classList.remove("hidden");
+      loginGuard.classList.remove("show");
+      userName.textContent = user.name || user.email?.split("@")[0] || "User";
+      userEmailText.textContent = user.email || "-";
+      renderHistory();
+    }
+
+    function showGuard() {
+      appShell.classList.add("hidden");
+      loginGuard.classList.add("show");
+    }
+
+    function getRequests() {
+      return JSON.parse(localStorage.getItem(requestKey) || "[]");
+    }
+
+    function saveRequest(request) {
+      const requests = getRequests();
+      requests.unshift({ id: crypto.randomUUID(), createdAt: new Date().toLocaleString(), ...request });
+      localStorage.setItem(requestKey, JSON.stringify(requests.slice(0, 10)));
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const requests = getRequests();
+
+      if (!requests.length) {
+        historyList.innerHTML = `
+          <div class="history-item">
+            <div>
+              <strong>No request yet</strong><br />
+              <span>Bill ya LIC fetch karne ke baad yahan activity dikh jayegi.</span>
+            </div>
+            <strong>-</strong>
+          </div>
+        `;
+        return;
+      }
+
+      historyList.innerHTML = "";
+      requests.forEach((request) => {
+        const item = document.createElement("div");
+        item.className = "history-item";
+        item.innerHTML = `
+          <div>
+            <strong>${request.title}</strong><br />
+            <span>${request.detail} | ${request.createdAt}</span>
+          </div>
+          <strong>${request.status}</strong>
+        `;
+        historyList.appendChild(item);
+      });
+    }
+
+    function renderDemoResult(target, rows) {
+      target.innerHTML = rows.map((row) => `<strong>${row.label}:</strong> ${row.value}`).join("<br />");
+      target.classList.add("show");
+    }
+
+    document.getElementById("billFetchForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      const category = formData.get("billCategory");
+      const operator = formData.get("operator");
+      const consumerNumber = formData.get("consumerNumber");
+
+      // Future API hook:
+      // const response = await fetch("YOUR_BILL_FETCH_API_URL", { method: "POST", body: JSON.stringify({ category, operator, consumerNumber }) });
+      // const bill = await response.json();
+
+      renderDemoResult(billResult, [
+        { label: "Service", value: category },
+        { label: "Operator", value: operator },
+        { label: "Consumer Number", value: consumerNumber },
+        { label: "Demo Amount", value: "Rs. 1,250.00" },
+        { label: "Status", value: "Ready for API integration" }
+      ]);
+
+      saveRequest({
+        title: `${category} bill fetch`,
+        detail: `${operator} | ${consumerNumber}`,
+        status: "Demo"
+      });
+    });
+
+    document.getElementById("licFetchForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      const policyNumber = formData.get("policyNumber");
+      const dob = formData.get("dob");
+      const mobile = formData.get("mobile");
+
+      // Future API hook:
+      // const response = await fetch("YOUR_LIC_FETCH_API_URL", { method: "POST", body: JSON.stringify({ policyNumber, dob, mobile }) });
+      // const policy = await response.json();
+
+      renderDemoResult(licResult, [
+        { label: "Policy Number", value: policyNumber },
+        { label: "DOB", value: dob },
+        { label: "Mobile", value: mobile },
+        { label: "Demo Premium", value: "Rs. 3,780.00" },
+        { label: "Status", value: "Ready for API integration" }
+      ]);
+
+      saveRequest({
+        title: "LIC policy fetch",
+        detail: `${policyNumber} | ${mobile}`,
+        status: "Demo"
+      });
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      clearSession();
+
+      if (firebaseReady && auth.currentUser) {
+        await signOut(auth);
+      }
+
+      window.location.href = "index.html";
+    });
+
+    if (firebaseReady) {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const sessionUser = readSession() || {};
+          const currentUser = {
+            name: sessionUser.name || user.displayName || user.email?.split("@")[0],
+            email: user.email
+          };
+          saveSession(currentUser);
+          showDashboard(currentUser);
+          return;
+        }
+
+        const localUser = readSession();
+        if (localUser) {
+          showDashboard(localUser);
+        } else {
+          showGuard();
+        }
+      });
+    } else {
+      const localUser = readSession();
+      if (localUser) {
+        showDashboard(localUser);
+      } else {
+        showGuard();
+      }
+    }
+  </script>
+</body>
+</html>

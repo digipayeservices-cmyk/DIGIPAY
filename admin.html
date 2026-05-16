@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | DigiPay E-Services</title>
+  <style>
+    :root {
+      --ink: #102033;
+      --deep: #102033;
+      --muted: #5d6f86;
+      --line: #d5e4f4;
+      --paper: #f4fbff;
+      --white: #ffffff;
+      --teal: #00a8c8;
+      --teal-dark: #006e8a;
+      --green: #17b26a;
+      --yellow: #ffca3a;
+      --red: #ff5a5f;
+      --accent: #6c4df6;
+      --card-bg: #ffffff;
+      --shadow: 0 18px 50px rgba(16, 32, 51, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 10px 0;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      font-size: 22px;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--red);
+      color: var(--white);
+      font-weight: 900;
+      box-shadow: 0 8px 22px rgba(255, 90, 95, 0.25);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0 15px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--teal);
+      color: var(--white);
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(8, 127, 140, 0.22);
+    }
+
+    .btn.light {
+      background: var(--card-bg);
+      color: var(--teal);
+      border: 1px solid var(--line);
+      box-shadow: none;
+    }
+
+    .btn.danger {
+      background: var(--red);
+      box-shadow: 0 10px 24px rgba(255, 90, 95, 0.24);
+    }
+
+    .btn.small {
+      min-height: 36px;
+      padding: 0 12px;
+      font-size: 13px;
+    }
+
+    main {
+      padding: 28px 0 56px;
+    }
+
+    .admin-head {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .hero,
+    .panel,
+    .stat,
+    .guard-box {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 28px;
+      color: var(--white);
+      background:
+        linear-gradient(135deg, rgba(16, 32, 51, 0.9), rgba(108, 77, 246, 0.72), rgba(255, 90, 95, 0.62)),
+        url("https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1400&q=80") center/cover;
+    }
+
+    .hero small {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      font-weight: 800;
+    }
+
+    .hero h1 {
+      margin: 18px 0 8px;
+      font-size: clamp(30px, 5vw, 48px);
+      line-height: 1.08;
+    }
+
+    .hero p {
+      max-width: 680px;
+      margin: 0;
+      color: #eef7fb;
+      font-size: 17px;
+    }
+
+    .admin-note {
+      padding: 22px;
+    }
+
+    .admin-note h2,
+    .panel h2 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    .helper-text {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .stat {
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(23, 32, 42, 0.06);
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .panel {
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 10px 30px rgba(23, 32, 42, 0.06);
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr 220px auto auto;
+      gap: 12px;
+      margin-bottom: 14px;
+      align-items: center;
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 42px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--card-bg);
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 860px;
+      font-size: 14px;
+      background: var(--card-bg);
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--paper);
+      color: var(--ink);
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    td select {
+      min-width: 145px;
+    }
+
+    .empty {
+      padding: 22px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 0 9px;
+      border-radius: 999px;
+      background: #e9fbff;
+      color: var(--teal-dark);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .history-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .history-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      font-size: 14px;
+    }
+
+    .history-item span {
+      color: var(--muted);
+    }
+
+    .guard {
+      display: none;
+      min-height: 100vh;
+      place-items: center;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .guard.show {
+      display: grid;
+    }
+
+    .guard-box {
+      width: min(460px, 100%);
+      padding: 26px;
+    }
+
+    .app-shell.hidden {
+      display: none;
+    }
+
+    @media (max-width: 960px) {
+      .admin-head,
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .brand {
+        font-size: 18px;
+      }
+
+      .nav-actions {
+        width: 100%;
+      }
+
+      .stats,
+      .history-item {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="guard" id="adminGuard">
+    <div class="guard-box">
+      <h1>Admin login required</h1>
+      <p class="helper-text">Admin dashboard open karne ke liye pehle admin login karein.</p>
+      <a class="btn" href="index.html">Go to Admin Login</a>
+    </div>
+  </div>
+
+  <div class="app-shell hidden" id="appShell">
+    <header>
+      <nav class="container nav" aria-label="Admin dashboard navigation">
+        <a class="brand" href="admin.html" aria-label="DigiPay admin dashboard">
+          <span class="brand-mark">AD</span>
+          <span>DigiPay Admin</span>
+        </a>
+        <div class="nav-actions">
+          <a class="btn light" href="index.html">Home</a>
+          <button class="btn danger" type="button" id="logoutBtn">Logout</button>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <div class="container">
+        <section class="admin-head" aria-label="Admin summary">
+          <div class="hero">
+            <small>Admin Dashboard</small>
+            <h1>All users access panel</h1>
+            <p>Yahan se registered users, enquiries, status update, aur user requests ek jagah manage kar sakte hain.</p>
+          </div>
+          <aside class="panel admin-note">
+            <h2>Admin Access</h2>
+            <p class="helper-text">Demo login abhi username <strong>admin</strong> aur password <strong>admin123</strong> se open hota hai. Production me isse secure admin auth se replace karna hoga.</p>
+            <span class="badge" id="dataMode">Loading</span>
+          </aside>
+        </section>
+
+        <section class="stats" aria-label="User statistics">
+          <article class="stat">
+            <span>Total Users</span>
+            <strong id="totalUsers">0</strong>
+          </article>
+          <article class="stat">
+            <span>New</span>
+            <strong id="newUsers">0</strong>
+          </article>
+          <article class="stat">
+            <span>Active</span>
+            <strong id="activeUsers">0</strong>
+          </article>
+          <article class="stat">
+            <span>Requests</span>
+            <strong id="totalRequests">0</strong>
+          </article>
+        </section>
+
+        <section class="panel" aria-label="All users">
+          <div class="panel-head">
+            <div>
+              <h2>All Users</h2>
+              <p class="helper-text" id="tableStatus">Users load ho rahe hain.</p>
+            </div>
+            <button class="btn light" type="button" id="refreshUsers">Refresh</button>
+          </div>
+
+          <div class="toolbar">
+            <input id="searchUsers" type="search" placeholder="Search name, mobile, email, service" />
+            <select id="statusFilter">
+              <option value="All">All Status</option>
+              <option value="New">New</option>
+              <option value="Contacted">Contacted</option>
+              <option value="KYC Pending">KYC Pending</option>
+              <option value="Active">Active</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+            <button class="btn light" type="button" id="exportUsers">Export CSV</button>
+            <button class="btn danger" type="button" id="clearUsers">Clear All</button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Mobile</th>
+                  <th>Email</th>
+                  <th>Service</th>
+                  <th>Status</th>
+                  <th>Message</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="userTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel" aria-label="User requests">
+          <div class="panel-head">
+            <div>
+              <h2>User Requests</h2>
+              <p class="helper-text">Bill/LIC demo fetch requests yahan local browser storage se dikhengi.</p>
+            </div>
+            <span class="badge">Local Demo</span>
+          </div>
+          <div class="history-list" id="historyList"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import {
+      getDatabase,
+      get,
+      ref,
+      remove,
+      update
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDSDxtnPiWDuPHMo_9mn1K-HkmCTmrrW3E",
+      authDomain: "digipay-2a750.firebaseapp.com",
+      databaseURL: "https://digipay-2a750-default-rtdb.firebaseio.com",
+      projectId: "digipay-2a750",
+      storageBucket: "digipay-2a750.firebasestorage.app",
+      messagingSenderId: "493399728750",
+      appId: "1:493399728750:web:46e5fc9ba76d44ad997c7f",
+      measurementId: "G-JKZ1SCXJ8N"
+    };
+
+    const firebaseReady = !firebaseConfig.apiKey.includes("PASTE_") && !firebaseConfig.appId.includes("PASTE_");
+    const app = firebaseReady ? initializeApp(firebaseConfig) : null;
+    const db = firebaseReady ? getDatabase(app) : null;
+    const adminSessionKey = "digipay_admin_session";
+    const usersKey = "digipay_enquiries";
+    const requestKey = "digipay_user_requests";
+    let allUsers = [];
+
+    const appShell = document.getElementById("appShell");
+    const adminGuard = document.getElementById("adminGuard");
+    const userTableBody = document.getElementById("userTableBody");
+    const searchUsers = document.getElementById("searchUsers");
+    const statusFilter = document.getElementById("statusFilter");
+    const tableStatus = document.getElementById("tableStatus");
+    const historyList = document.getElementById("historyList");
+    const dataMode = document.getElementById("dataMode");
+
+    function hasAdminSession() {
+      return localStorage.getItem(adminSessionKey) === "active";
+    }
+
+    function showDashboard() {
+      appShell.classList.remove("hidden");
+      adminGuard.classList.remove("show");
+      dataMode.textContent = firebaseReady ? "Firebase Database" : "Local Storage";
+      loadAndRender();
+      renderRequests();
+    }
+
+    function showGuard() {
+      appShell.classList.add("hidden");
+      adminGuard.classList.add("show");
+    }
+
+    function getLocalUsers() {
+      return JSON.parse(localStorage.getItem(usersKey) || "[]");
+    }
+
+    function saveLocalUsers(users) {
+      localStorage.setItem(usersKey, JSON.stringify(users));
+    }
+
+    async function loadUsers() {
+      if (!firebaseReady) {
+        return getLocalUsers();
+      }
+
+      const snapshot = await get(ref(db, "users"));
+      const data = snapshot.val() || {};
+      return Object.entries(data).map(([id, user]) => ({
+        id,
+        ...user
+      }));
+    }
+
+    async function updateUserStatus(userId, status) {
+      if (!firebaseReady) {
+        const users = getLocalUsers().map((user) => user.id === userId ? { ...user, status } : user);
+        saveLocalUsers(users);
+        return;
+      }
+
+      await update(ref(db, `users/${userId}`), {
+        status,
+        updatedAt: Date.now()
+      });
+    }
+
+    async function deleteUser(userId) {
+      if (!firebaseReady) {
+        const users = getLocalUsers().filter((user) => user.id !== userId);
+        saveLocalUsers(users);
+        return;
+      }
+
+      await remove(ref(db, `users/${userId}`));
+    }
+
+    async function clearAllUsers() {
+      if (!confirm("All users clear karne hain?")) {
+        return;
+      }
+
+      if (!firebaseReady) {
+        saveLocalUsers([]);
+      } else {
+        await remove(ref(db, "users"));
+      }
+
+      await loadAndRender();
+    }
+
+    function getFilteredUsers() {
+      const query = searchUsers.value.trim().toLowerCase();
+      const selectedStatus = statusFilter.value;
+
+      return allUsers.filter((user) => {
+        const statusMatch = selectedStatus === "All" || (user.status || "New") === selectedStatus;
+        const searchText = [
+          user.name,
+          user.phone,
+          user.email,
+          user.service,
+          user.business,
+          user.message
+        ].join(" ").toLowerCase();
+
+        return statusMatch && (!query || searchText.includes(query));
+      });
+    }
+
+    function updateStats() {
+      const requests = getRequests();
+      document.getElementById("totalUsers").textContent = allUsers.length;
+      document.getElementById("newUsers").textContent = allUsers.filter((user) => (user.status || "New") === "New").length;
+      document.getElementById("activeUsers").textContent = allUsers.filter((user) => (user.status || "New") === "Active").length;
+      document.getElementById("totalRequests").textContent = requests.length;
+    }
+
+    function renderUsers() {
+      const users = getFilteredUsers();
+      userTableBody.innerHTML = "";
+      tableStatus.textContent = `${users.length} user dikh rahe hain.`;
+      updateStats();
+
+      if (!users.length) {
+        userTableBody.innerHTML = '<tr><td colspan="7" class="empty">Koi user record nahi mila.</td></tr>';
+        return;
+      }
+
+      users.forEach((user) => {
+        const row = document.createElement("tr");
+        [user.name || "-", user.phone || "-", user.email || "-", user.service || user.business || "-", user.message || "-"].forEach((value, index) => {
+          const cell = document.createElement("td");
+          cell.textContent = value;
+
+          if (index === 4 && value.length > 80) {
+            cell.textContent = `${value.slice(0, 80)}...`;
+            cell.title = value;
+          }
+
+          row.appendChild(cell);
+        });
+
+        const statusCell = document.createElement("td");
+        const statusSelect = document.createElement("select");
+        ["New", "Contacted", "KYC Pending", "Active", "Rejected"].forEach((status) => {
+          const option = document.createElement("option");
+          option.value = status;
+          option.textContent = status;
+          option.selected = (user.status || "New") === status;
+          statusSelect.appendChild(option);
+        });
+        statusCell.appendChild(statusSelect);
+        row.insertBefore(statusCell, row.children[4]);
+
+        const actionCell = document.createElement("td");
+        const saveButton = document.createElement("button");
+        saveButton.className = "btn light small";
+        saveButton.type = "button";
+        saveButton.textContent = "Update";
+        saveButton.addEventListener("click", async () => {
+          await updateUserStatus(user.id, statusSelect.value);
+          await loadAndRender();
+        });
+
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "btn danger small";
+        deleteButton.type = "button";
+        deleteButton.textContent = "Delete";
+        deleteButton.style.marginLeft = "8px";
+        deleteButton.addEventListener("click", async () => {
+          if (confirm("Is user ko delete karna hai?")) {
+            await deleteUser(user.id);
+            await loadAndRender();
+          }
+        });
+
+        actionCell.append(saveButton, deleteButton);
+        row.appendChild(actionCell);
+        userTableBody.appendChild(row);
+      });
+    }
+
+    async function loadAndRender() {
+      tableStatus.textContent = "Users load ho rahe hain.";
+
+      try {
+        allUsers = await loadUsers();
+        renderUsers();
+      } catch (error) {
+        tableStatus.textContent = error.message;
+      }
+    }
+
+    function getRequests() {
+      return JSON.parse(localStorage.getItem(requestKey) || "[]");
+    }
+
+    function renderRequests() {
+      const requests = getRequests();
+      historyList.innerHTML = "";
+      updateStats();
+
+      if (!requests.length) {
+        historyList.innerHTML = `
+          <div class="history-item">
+            <div>
+              <strong>No request yet</strong><br />
+              <span>User bill/LIC fetch karega to yahan request dikh jayegi.</span>
+            </div>
+            <strong>-</strong>
+          </div>
+        `;
+        return;
+      }
+
+      requests.forEach((request) => {
+        const item = document.createElement("div");
+        item.className = "history-item";
+        item.innerHTML = `
+          <div>
+            <strong>${request.title}</strong><br />
+            <span>${request.detail} | ${request.createdAt}</span>
+          </div>
+          <strong>${request.status}</strong>
+        `;
+        historyList.appendChild(item);
+      });
+    }
+
+    function exportCsv() {
+      const users = getFilteredUsers();
+      const headers = ["Name", "Mobile", "Email", "Service", "Status", "Message"];
+      const rows = users.map((user) => [
+        user.name || "",
+        user.phone || "",
+        user.email || "",
+        user.service || user.business || "",
+        user.status || "New",
+        user.message || ""
+      ]);
+      const csv = [headers, ...rows]
+        .map((row) => row.map((value) => `"${String(value).replaceAll('"', '""')}"`).join(","))
+        .join("\n");
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "digipay-users.csv";
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    searchUsers.addEventListener("input", renderUsers);
+    statusFilter.addEventListener("change", renderUsers);
+    document.getElementById("refreshUsers").addEventListener("click", loadAndRender);
+    document.getElementById("clearUsers").addEventListener("click", clearAllUsers);
+    document.getElementById("exportUsers").addEventListener("click", exportCsv);
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem(adminSessionKey);
+      window.location.href = "index.html";
+    });
+
+    if (hasAdminSession()) {
+      showDashboard();
+    } else {
+      showGuard();
+    }
+  </script>
+</body>
+</html>

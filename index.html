@@ -1174,6 +1174,8 @@
     const signupStatus = document.getElementById("signupStatus");
     const usersKey = "digipay_enquiries";
     const signedUsersKey = "digipay_signed_users";
+    const currentUserKey = "digipay_current_user";
+    const adminSessionKey = "digipay_admin_session";
 
     themeToggle.addEventListener("click", () => {
       document.body.classList.toggle("dark-mode");
@@ -1219,6 +1221,10 @@
 
     function saveSignedUsers(users) {
       localStorage.setItem(signedUsersKey, JSON.stringify(users));
+    }
+
+    function saveCurrentUser(user) {
+      localStorage.setItem(currentUserKey, JSON.stringify(user));
     }
 
     async function loadUsers() {
@@ -1354,17 +1360,20 @@
             message: "Signed up from website",
             createdAt: serverTimestamp()
           });
+          saveCurrentUser({ name, email, phone });
           signupStatus.textContent = "Account ban gaya aur Realtime Database mein save ho gaya.";
         } else {
           const users = getSignedUsers();
           users.unshift({ id: crypto.randomUUID(), name, email, phone, password });
           saveSignedUsers(users);
+          saveCurrentUser({ name, email, phone });
           await saveEnquiry({ id: crypto.randomUUID(), name, email, phone, service: "Registered User", status: "New", message: "Signed up from website" });
           signupStatus.textContent = "Firebase config pending hai. Signup local storage mein save hua.";
         }
 
         event.target.reset();
         await renderUsers();
+        window.location.href = "user.html";
       } catch (error) {
         signupStatus.textContent = error.message;
       }
@@ -1377,13 +1386,26 @@
 
       try {
         if (firebaseReady) {
-          await signInWithEmailAndPassword(auth, email, password);
+          const credential = await signInWithEmailAndPassword(auth, email, password);
+          saveCurrentUser({
+            name: credential.user.displayName || email.split("@")[0],
+            email
+          });
           userLoginStatus.textContent = "Login successful.";
+          window.location.href = "user.html";
         } else {
           const foundUser = getSignedUsers().find((user) => user.email === email && user.password === password);
-          userLoginStatus.textContent = foundUser
-            ? "Login successful. Firebase config add karne ke baad ye online chalega."
-            : "User nahi mila. Pehle Sign Up karein.";
+          if (foundUser) {
+            saveCurrentUser({
+              name: foundUser.name,
+              email: foundUser.email,
+              phone: foundUser.phone
+            });
+            userLoginStatus.textContent = "Login successful. Firebase config add karne ke baad ye online chalega.";
+            window.location.href = "user.html";
+          } else {
+            userLoginStatus.textContent = "User nahi mila. Pehle Sign Up karein.";
+          }
         }
       } catch (error) {
         userLoginStatus.textContent = error.message;
@@ -1396,11 +1418,13 @@
       const password = document.getElementById("adminPass").value.trim();
 
       if (username === "admin" && password === "admin123") {
+        localStorage.setItem(adminSessionKey, "active");
         adminLoginStatus.textContent = firebaseReady
           ? "Admin login successful. Realtime Database users loaded."
           : "Admin login successful. Firebase config pending hai, local data loaded.";
         adminPanel.classList.add("show");
         await renderUsers();
+        window.location.href = "admin.html";
       } else {
         adminLoginStatus.textContent = "Wrong admin username ya password.";
         adminPanel.classList.remove("show");
